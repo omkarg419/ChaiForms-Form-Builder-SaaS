@@ -3,7 +3,10 @@
   "display": "Node JS",
   "extends": "./base.json",
   "compilerOptions": {
-    "moduleResolution": "NodeNext",
-    "module": "NodeNext"
+    "moduleResolution": "nodenext",
+    "module": "NodeNext",
+    "target": "ES2020",
+    "lib": ["ES2020"],
+    "types": ["node"]
   }
 }
