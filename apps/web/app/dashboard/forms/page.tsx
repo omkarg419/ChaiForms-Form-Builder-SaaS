@@ -1,6 +1,7 @@
 import { AppSidebar } from "~/components/app-sidebar";
 import { SiteHeader } from "~/components/site-header";
 import { SidebarInset, SidebarProvider } from "~/components/ui/sidebar";
+import { CreateFormDialog } from "../create-form-dialog";
 
 export default function FormsPage() {
   return (
@@ -23,6 +24,9 @@ export default function FormsPage() {
                 <p className="text-sm text-muted-foreground mb-6">
                   This route is now wired up. Add your form builder content here.
                 </p>
+                <div className="mb-6">
+                  <CreateFormDialog />
+                </div>
                 {/* Add your form builder components below */}
               </div>
             </main>
