@@ -54,3 +54,29 @@ export const useGetFormsByUser = () => {
     isFetched,
   };
 };
+
+export const useGetFormById = (id?: string) => {
+  const {
+    data: form,
+    error,
+    isError,
+    isSuccess,
+    refetch,
+    status,
+    isLoading,
+    isFetching,
+    isFetched,
+  } = trpc.form.getFormById.useQuery({ id: id ?? "" }, { enabled: Boolean(id) });
+
+  return {
+    form,
+    error,
+    isError,
+    isSuccess,
+    refetch,
+    status,
+    isLoading,
+    isFetching,
+    isFetched,
+  };
+};

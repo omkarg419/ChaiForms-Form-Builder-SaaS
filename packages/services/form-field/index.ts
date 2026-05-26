@@ -26,6 +26,16 @@ class FormFieldService {
     return result[0]!;
   }
 
+  public async getFieldsByFormId(formId: string) {
+    const result = await db
+      .select()
+      .from(formFieldsTable)
+      .where(eq(formFieldsTable.formId, formId))
+      .orderBy(desc(formFieldsTable.index));
+
+    return result;
+  }
+
   public async createField(payload: Partial<CreateFieldInputType>) {
     const now = Date.now();
     const data = await createFieldInput.parseAsync({
@@ -74,7 +84,7 @@ class FormFieldService {
       throw new Error("Failed to create form field");
     }
 
-    return { id: insertResult[0].id };
+    return { id: String(insertResult[0].id) };
   }
 
   public async deleteField(id: string) {
@@ -85,7 +95,7 @@ class FormFieldService {
     if (!result || result.length === 0) {
       throw new Error("Field not found or already deleted");
     }
-    return { id: result[0]?.id };
+    return { id: String(result[0]?.id) };
   }
 
   public async updateField(payload: UpdateFieldInputType) {
@@ -114,7 +124,7 @@ class FormFieldService {
       throw new Error("Field not found");
     }
 
-    return { id: result[0]?.id };
+    return { id: String(result[0]?.id) };
   }
 }
 

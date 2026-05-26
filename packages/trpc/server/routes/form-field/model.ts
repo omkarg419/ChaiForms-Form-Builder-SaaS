@@ -42,6 +42,10 @@ export const getFieldInputModel = z.object({
   id: z.string().uuid(),
 });
 
+export const getFieldsByFormIdInputModel = z.object({
+  formId: z.string().uuid(),
+});
+
 export const formFieldItemModel = z.object({
   id: z.string().uuid(),
   label: z.string(),
@@ -57,3 +61,5 @@ export const formFieldItemModel = z.object({
 });
 
 export const getFieldOutputModel = formFieldItemModel.nullable();
+
+export const getFieldsByFormIdOutputModel = z.array(formFieldItemModel);

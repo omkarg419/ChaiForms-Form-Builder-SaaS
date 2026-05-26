@@ -21,4 +21,10 @@ export const formItemModel = z.object({
 
 export const getFormsByUserOutputModel = z.array(formItemModel);
 
-export const getFormByUserInputModel = z.undefined()
+export const getFormByUserInputModel = z.undefined();
+
+export const getFormByIdInputModel = z.object({
+  id: z.string().uuid(),
+});
+
+export const getFormByIdOutputModel = formItemModel.nullable();

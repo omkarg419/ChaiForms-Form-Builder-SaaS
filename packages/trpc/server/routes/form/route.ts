@@ -4,6 +4,8 @@ import { generatePath } from "../../utils/path-generator";
 import {
   createFormInputModel,
   createFormOutputModel,
+  getFormByIdInputModel,
+  getFormByIdOutputModel,
   getFormByUserInputModel,
   getFormsByUserOutputModel,
 } from "./model";
@@ -58,5 +60,33 @@ export const formRouter = router({
         createdAt: it.createdAt?.toISOString ? it.createdAt.toISOString() : String(it.createdAt),
         updatedAt: it.updatedAt ? (it.updatedAt as Date).toISOString() : null,
       }));
+    }),
+
+  getFormById: protectedProcedure
+    .meta({
+      openapi: {
+        method: "GET",
+        path: getPath("/get"),
+        tags: TAGS,
+        protect: true,
+      },
+    })
+    .input(getFormByIdInputModel)
+    .output(getFormByIdOutputModel)
+    .query(async ({ input, ctx }) => {
+      const form = await formService.getFormById(input.id);
+
+      if (!form || form.createdBy !== ctx.user.id) {
+        return null;
+      }
+
+      return {
+        id: form.id,
+        title: form.title,
+        description: form.description ?? null,
+        createdBy: form.createdBy,
+        createdAt: form.createdAt?.toISOString?.() ?? new Date().toISOString(),
+        updatedAt: form.updatedAt ? form.updatedAt.toISOString() : null,
+      };
     }),
 });

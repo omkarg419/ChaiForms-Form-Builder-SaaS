@@ -7,6 +7,8 @@ import {
   deleteFieldInputModel,
   deleteFieldOutputModel,
   formFieldItemModel,
+  getFieldsByFormIdInputModel,
+  getFieldsByFormIdOutputModel,
   getFieldInputModel,
   getFieldOutputModel,
   updateFieldInputModel,
@@ -129,5 +131,21 @@ export const formFieldRouter = router({
       }
 
       return serializeField(field);
+    }),
+
+  getFieldsByFormId: protectedProcedure
+    .meta({
+      openapi: {
+        method: "GET",
+        path: getPath("/by-form"),
+        tags: TAGS,
+        protect: true,
+      },
+    })
+    .input(getFieldsByFormIdInputModel)
+    .output(getFieldsByFormIdOutputModel)
+    .query(async ({ input }) => {
+      const fields = await formFieldService.getFieldsByFormId(input.formId);
+      return fields.map((field) => serializeField(field));
     }),
 });
