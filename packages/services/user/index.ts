@@ -72,9 +72,18 @@ class UserService {
       throw new Error("Invalid authentication method for this user");
     }
 
+
+    const hash = await this.generateHash(password, existingUserWithEmail.salt);
+
+    if (hash !== existingUserWithEmail.password) {
+      throw new Error("Invalid email or password");
+    }
     
-
-
+    const { token } = await this.generateUserToken({ id: existingUserWithEmail.id });
+    return {
+      id: existingUserWithEmail.id,
+      token,
+    };
   }
 }
 
