@@ -9,3 +9,16 @@ export const createFormOutputModel = z.object({
   id: z.string().describe("Form id"),
   createdAt: z.string().describe("ISO timestamp when form was created"),
 });
+
+export const formItemModel = z.object({
+  id: z.string(),
+  title: z.string(),
+  description: z.string().nullable(),
+  createdBy: z.string(),
+  createdAt: z.string(),
+  updatedAt: z.string().nullable(),
+});
+
+export const getFormsByUserOutputModel = z.array(formItemModel);
+
+export const getFormByUserInputModel = z.undefined()
