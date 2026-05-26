@@ -5,8 +5,10 @@ import { usersTable } from "@repo/database/models/user";
 import {
   type CreatUserWithEmailAndPasswordInputType,
   GenerateUserTokenPayloadType,
+  SigninUserWithEmailAndPasswordInputType,
   creatUserWithEmailAndPasswordInput,
   generateUserTokenPayload,
+  signinUserWithEmailAndPasswordInput,
 } from "./model";
 import { env } from "../env";
 
@@ -25,6 +27,10 @@ class UserService {
     return { token };
   }
 
+  private async generateHash(password: string, salt: string) {
+    return createHmac("sha256", salt).update(password).digest("hex");
+  }
+
   public async creatUserWithEmailAndPassword(payload: CreatUserWithEmailAndPasswordInputType) {
     const { fullName, email, password } =
       await creatUserWithEmailAndPasswordInput.parseAsync(payload);
@@ -35,7 +41,7 @@ class UserService {
     }
 
     const salt = randomBytes(16).toString("hex");
-    const hash = createHmac("sha256", salt).update(password).digest("hex");
+    const hash = await this.generateHash(password, salt);
 
     const userInsertResult = await db
       .insert(usersTable)
@@ -52,6 +58,23 @@ class UserService {
       id: userId,
       token,
     };
+  }
+
+  public async signinUserWithEmailAndPassword(payload: SigninUserWithEmailAndPasswordInputType) {
+    const { email, password } = await signinUserWithEmailAndPasswordInput.parseAsync(payload);
+
+    const existingUserWithEmail = await this.getUserByEmail(email);
+
+    if (!existingUserWithEmail) {
+      throw new Error("Invalid email or password");
+    }
+    if(!existingUserWithEmail.password || !existingUserWithEmail.salt){
+      throw new Error("Invalid authentication method for this user");
+    }
+
+    
+
+
   }
 }
 
