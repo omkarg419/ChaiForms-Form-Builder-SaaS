@@ -6,6 +6,7 @@ import {
   createUserWithEmailAndPasswordInputModel,
   createUserWithEmailAndPasswordOutputModel,
   signinUserWithEmailAndPasswordInputModel,
+  signinUserWithEmailAndPasswordOutputModel,
 } from "./model";
 
 const TAGS = ["Authentication"];
@@ -43,7 +44,7 @@ export const authRouter = router({
       },
     })
     .input(signinUserWithEmailAndPasswordInputModel)
-    .output(createUserWithEmailAndPasswordOutputModel)
+    .output(signinUserWithEmailAndPasswordOutputModel)
     .mutation(async ({ input,ctx }) => {
       const { email, password } = input;
 
@@ -55,5 +56,5 @@ export const authRouter = router({
       setAuthanticationCookie(ctx,token);
       return { id };
     }),
-    
+
 });
