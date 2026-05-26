@@ -27,8 +27,28 @@ class UserService {
     return { token };
   }
 
+  private async verifyUserToken(token: string): Promise<GenerateUserTokenPayloadType> {
+    try {
+      const decoded = JWT.verify(token, env.JWT_SECRET) as GenerateUserTokenPayloadType;
+      return { id: decoded.id };
+    } catch (error) {
+      throw new Error("Invalid or expired token");
+    }
+  }
+
   private async generateHash(password: string, salt: string) {
     return createHmac("sha256", salt).update(password).digest("hex");
+  }
+
+  private async getUserInfoById(id: string) {
+    const user = await db
+      .select({ id: usersTable.id, email: usersTable.email, fullName: usersTable.fullName })
+      .from(usersTable)
+      .where(eq(usersTable.id, id));
+    if (!user || user.length === 0) {
+      throw new Error("User not found");
+    }
+    return user[0]!;
   }
 
   public async creatUserWithEmailAndPassword(payload: CreatUserWithEmailAndPasswordInputType) {
@@ -68,22 +88,27 @@ class UserService {
     if (!existingUserWithEmail) {
       throw new Error("Invalid email or password");
     }
-    if(!existingUserWithEmail.password || !existingUserWithEmail.salt){
+    if (!existingUserWithEmail.password || !existingUserWithEmail.salt) {
       throw new Error("Invalid authentication method for this user");
     }
-
 
     const hash = await this.generateHash(password, existingUserWithEmail.salt);
 
     if (hash !== existingUserWithEmail.password) {
       throw new Error("Invalid email or password");
     }
-    
+
     const { token } = await this.generateUserToken({ id: existingUserWithEmail.id });
     return {
       id: existingUserWithEmail.id,
       token,
     };
+  }
+
+  public async verifyAndDecodeUserToken(token: string) {
+    const { id } = await this.verifyUserToken(token);
+    const userInfo = await this.getUserInfoById(id);
+    return { ...userInfo };
   }
 }
 

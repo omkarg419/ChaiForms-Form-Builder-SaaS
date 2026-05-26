@@ -1,10 +1,12 @@
 import { userService } from "../../services";
 import { publicProcedure, router } from "../../trpc";
-import { setAuthanticationCookie } from "../../utils/cookie";
+import { getAuthanticationCookie, setAuthanticationCookie } from "../../utils/cookie";
 import { generatePath } from "../../utils/path-generator";
 import {
   createUserWithEmailAndPasswordInputModel,
   createUserWithEmailAndPasswordOutputModel,
+  getLoggedInUserInputModel,
+  getLoggedInUserOutputModel,
   signinUserWithEmailAndPasswordInputModel,
   signinUserWithEmailAndPasswordOutputModel,
 } from "./model";
@@ -23,16 +25,16 @@ export const authRouter = router({
     })
     .input(createUserWithEmailAndPasswordInputModel)
     .output(createUserWithEmailAndPasswordOutputModel)
-    .mutation(async ({ input,ctx }) => {
+    .mutation(async ({ input, ctx }) => {
       const { fullName, email, password } = input;
 
-      const { id , token} = await userService.creatUserWithEmailAndPassword({
+      const { id, token } = await userService.creatUserWithEmailAndPassword({
         fullName,
         email,
         password,
       });
 
-      setAuthanticationCookie(ctx,token);
+      setAuthanticationCookie(ctx, token);
       return { id };
     }),
   signinUserWithEmailAndPassword: publicProcedure
@@ -45,16 +47,33 @@ export const authRouter = router({
     })
     .input(signinUserWithEmailAndPasswordInputModel)
     .output(signinUserWithEmailAndPasswordOutputModel)
-    .mutation(async ({ input,ctx }) => {
+    .mutation(async ({ input, ctx }) => {
       const { email, password } = input;
 
-      const { id , token} = await userService.signinUserWithEmailAndPassword({
+      const { id, token } = await userService.signinUserWithEmailAndPassword({
         email,
         password,
       });
 
-      setAuthanticationCookie(ctx,token);
+      setAuthanticationCookie(ctx, token);
       return { id };
     }),
-
+  getLoggedInUserInfo: publicProcedure
+    .meta({
+      openapi: {
+        method: "GET",
+        path: getPath("/getLoggedInUserInfo"),
+        tags: TAGS,
+      },
+    })
+    .input(getLoggedInUserInputModel)
+    .output(getLoggedInUserOutputModel)
+    .query(async ({ ctx }) => {
+      const userToken = getAuthanticationCookie(ctx)
+      if (!userToken) {
+        throw new Error("Not authenticated");
+      }
+      const {id,email,fullName} = await userService.verifyAndDecodeUserToken(userToken);
+      return { id, email, fullName };
+    })
 });

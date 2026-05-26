@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+
 import "./globals.css";
 import { GlobalProviders } from "~/providers/global";
 
@@ -13,8 +14,8 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Streamyst",
-  description: "Media Forwarding",
+  title: "ChaiForms",
+  description: "A form builder for creating beautiful forms.",
 };
 
 export default function RootLayout({
