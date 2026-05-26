@@ -20,12 +20,7 @@ export default function FormsPage() {
           <div className="@container/main flex flex-1 flex-col gap-2">
             <main className="flex min-h-[60vh] items-start justify-center p-6">
               <div className="w-full max-w-6xl space-y-6">
-                <div>
-                  <h1 className="text-2xl font-semibold tracking-tight">Forms</h1>
-                  <p className="text-sm text-muted-foreground">
-                    Create, manage, and open forms in the builder.
-                  </p>
-                </div>
+              
 
                 <FormsTable />
                 {/* Add your form builder components below */}
