@@ -213,7 +213,7 @@ export default function PublicFormPage() {
         </div>
 
         <Card className="overflow-hidden border-zinc-700 bg-zinc-950 shadow-xl shadow-black/30 backdrop-blur">
-          <CardHeader className="border-b border-zinc-800 bg-gradient-to-br from-zinc-950 via-zinc-900 to-black">
+          <CardHeader className="border-b border-zinc-800 bg-linear-to-br from-zinc-950 via-zinc-900 to-black">
             <CardTitle className="text-3xl tracking-tight text-white sm:text-4xl">
               {form.title}
             </CardTitle>
