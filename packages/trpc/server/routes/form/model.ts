@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { getFieldsByFormIdOutputModel } from "../form-field/model";
 
 export const createFormInputModel = z.object({
   title: z.string().min(1).max(55, { message: "Title must be at most 55 characters" }),
@@ -28,3 +29,13 @@ export const getFormByIdInputModel = z.object({
 });
 
 export const getFormByIdOutputModel = formItemModel.nullable();
+
+// Public view of a form (includes fields) for sharing without authentication
+export const getFormPublicOutputModel = z
+  .object({
+    id: z.string(),
+    title: z.string(),
+    description: z.string().nullable(),
+    fields: getFieldsByFormIdOutputModel,
+  })
+  .nullable();

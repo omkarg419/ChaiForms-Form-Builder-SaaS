@@ -1,5 +1,6 @@
 import { db, eq } from "@repo/database";
 import { formsTable } from "@repo/database/models/form";
+import { formFieldsTable } from "@repo/database/models/form-field";
 import { createFormInput, type CreateFormInputType } from "./model";
 
 class FormService {
@@ -25,6 +26,32 @@ class FormService {
     const result = await db.select().from(formsTable).where(eq(formsTable.id, id));
     if (!result || result.length === 0) return null;
     return result[0]!;
+  }
+
+  public async getFormByIdWithFields(id: string) {
+    const rows = await db
+      .select({
+        form: formsTable,
+        field: formFieldsTable,
+      })
+      .from(formsTable)
+      .leftJoin(formFieldsTable, eq(formsTable.id, formFieldsTable.formId))
+      .where(eq(formsTable.id, id))
+      .orderBy(formFieldsTable.index);
+
+    if (!rows || rows.length === 0) {
+      return null;
+    }
+
+    const form = rows[0]!.form;
+    const fields = rows
+      .map((row) => row.field)
+      .filter((field): field is NonNullable<typeof field> => Boolean(field));
+
+    return {
+      ...form,
+      fields,
+    };
   }
 
   public async getFormsByUser(userId: string) {

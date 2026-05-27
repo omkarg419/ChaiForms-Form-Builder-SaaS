@@ -1,4 +1,4 @@
-import { protectedProcedure, router } from "../../trpc";
+import { protectedProcedure, publicProcedure, router } from "../../trpc";
 import { formService } from "../../services";
 import { generatePath } from "../../utils/path-generator";
 import {
@@ -8,6 +8,7 @@ import {
   getFormByIdOutputModel,
   getFormByUserInputModel,
   getFormsByUserOutputModel,
+  getFormPublicOutputModel,
 } from "./model";
 
 const TAGS = ["Forms"];
@@ -87,6 +88,40 @@ export const formRouter = router({
         createdBy: form.createdBy,
         createdAt: form.createdAt?.toISOString?.() ?? new Date().toISOString(),
         updatedAt: form.updatedAt ? form.updatedAt.toISOString() : null,
+      };
+    }),
+
+  getPublicForm: publicProcedure
+    .meta({
+      openapi: {
+        method: "GET",
+        path: getPath("/public"),
+        tags: TAGS,
+      },
+    })
+    .input(getFormByIdInputModel)
+    .output(getFormPublicOutputModel)
+    .query(async ({ input }) => {
+      const form = await formService.getFormByIdWithFields(input.id);
+      if (!form) return null;
+
+      return {
+        id: form.id,
+        title: form.title,
+        description: form.description ?? null,
+        fields: form.fields.map((field) => ({
+          id: field.id,
+          label: field.label,
+          labelKey: field.labelKey,
+          placeholder: field.placeholder ?? null,
+          description: field.description ?? null,
+          isRequired: field.isRequired,
+          index: String(field.index),
+          type: field.type,
+          formId: field.formId,
+          createdAt: field.createdAt ? field.createdAt.toISOString() : null,
+          updatedAt: field.updatedAt ? field.updatedAt.toISOString() : null,
+        })),
       };
     }),
 });
