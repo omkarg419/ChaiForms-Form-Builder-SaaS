@@ -5,7 +5,20 @@ import {
   type FormSubmissionValueRow,
 } from "@repo/database/models/form-submission";
 import { formsTable } from "@repo/database/models/form";
-import { createFormSubmissionInput, type CreateFormSubmissionInputType } from "./model";
+import {
+  createFormSubmissionInput,
+  getFormSubmissionsByFormIdInput,
+  type CreateFormSubmissionInputType,
+  type GetFormSubmissionsByFormIdInputType,
+} from "./model";
+
+export type GetFormSubmissionResult = {
+  id: string;
+  formId: string;
+  values: FormSubmissionValueRow;
+  createdAt: Date | null;
+  updatedAt: Date | null;
+};
 
 class FormSubmissionService {
   public async createFormSubmission(payload: CreateFormSubmissionInputType) {
@@ -63,6 +76,37 @@ class FormSubmissionService {
     return {
       id: insertResult[0].id,
     };
+  }
+
+  public async getFormSubmissionsByFormId(payload: GetFormSubmissionsByFormIdInputType) {
+    const { formId } = await getFormSubmissionsByFormIdInput.parseAsync(payload);
+
+    const form = await db
+      .select({ id: formsTable.id })
+      .from(formsTable)
+      .where(eq(formsTable.id, formId));
+    if (!form || form.length === 0) {
+      throw new Error("Form not found");
+    }
+
+    const submissions = await db
+      .select({
+        id: formSubmissionsTable.id,
+        formId: formSubmissionsTable.formId,
+        values: formSubmissionsTable.values,
+        createdAt: formSubmissionsTable.createdAt,
+        updatedAt: formSubmissionsTable.updatedAt,
+      })
+      .from(formSubmissionsTable)
+      .where(eq(formSubmissionsTable.formId, formId));
+
+    return submissions.map((submission) => ({
+      id: submission.id,
+      formId: submission.formId,
+      values: (submission.values ?? []) as FormSubmissionValueRow,
+      createdAt: submission.createdAt ?? null,
+      updatedAt: submission.updatedAt ?? null,
+    }));
   }
 }
 
