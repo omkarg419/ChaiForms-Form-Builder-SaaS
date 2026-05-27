@@ -1,8 +1,10 @@
 "use client";
 
+import { useState, type Dispatch, type FormEvent, type SetStateAction } from "react";
 import { useParams } from "next/navigation";
 import { ArrowLeft, Loader2, Lock, Sparkles } from "lucide-react";
 
+import { useCreateFormSubmission } from "~/hooks/api/form-submission";
 import { useGetPublicForm } from "~/hooks/api/form";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~/components/ui/card";
@@ -29,7 +31,11 @@ function getFormIdFromParams(params: Record<string, string | string[] | undefine
   return typeof value === "string" ? value : undefined;
 }
 
-function renderField(field: FormField) {
+function renderField(
+  field: FormField,
+  yesNoValues: Record<string, boolean>,
+  setYesNoValues: Dispatch<SetStateAction<Record<string, boolean>>>,
+) {
   const commonDescription = field.description ? (
     <p className="text-sm leading-6 text-zinc-400">{field.description}</p>
   ) : null;
@@ -43,8 +49,20 @@ function renderField(field: FormField) {
         >
           <Checkbox
             id={field.id}
+            checked={Boolean(yesNoValues[field.id])}
+            onCheckedChange={(checked) => {
+              setYesNoValues((currentValues) => ({
+                ...currentValues,
+                [field.id]: checked === true,
+              }));
+            }}
             required={field.isRequired}
             className="border-zinc-500 data-[state=checked]:border-white data-[state=checked]:bg-white data-[state=checked]:text-zinc-950"
+          />
+          <input
+            type="hidden"
+            name={field.id}
+            value={Boolean(yesNoValues[field.id]) ? "true" : "false"}
           />
           <div className="grid gap-1.5">
             <Label htmlFor={field.id} className="text-base text-white">
@@ -64,7 +82,7 @@ function renderField(field: FormField) {
           </Label>
           <Input
             id={field.id}
-            name={field.labelKey}
+            name={field.id}
             type="number"
             placeholder={field.placeholder ?? undefined}
             required={field.isRequired}
@@ -82,7 +100,7 @@ function renderField(field: FormField) {
           </Label>
           <Input
             id={field.id}
-            name={field.labelKey}
+            name={field.id}
             type="password"
             placeholder={field.placeholder ?? undefined}
             required={field.isRequired}
@@ -100,7 +118,7 @@ function renderField(field: FormField) {
           </Label>
           <Input
             id={field.id}
-            name={field.labelKey}
+            name={field.id}
             type="email"
             placeholder={field.placeholder ?? undefined}
             required={field.isRequired}
@@ -118,7 +136,7 @@ function renderField(field: FormField) {
           </Label>
           <Input
             id={field.id}
-            name={field.labelKey}
+            name={field.id}
             placeholder={field.placeholder ?? undefined}
             required={field.isRequired}
             className="border-zinc-700 bg-zinc-950 text-white placeholder:text-zinc-400 focus-visible:ring-white/20"
@@ -133,6 +151,54 @@ export default function PublicFormPage() {
   const params = useParams();
   const formId = getFormIdFromParams(params as Record<string, string | string[] | undefined>);
   const { form, isLoading, isError } = useGetPublicForm(formId);
+  const {
+    createFormSubmissionAsync,
+    error: submissionError,
+    status: submissionStatus,
+    reset: resetSubmissionState,
+  } = useCreateFormSubmission();
+  const [submissionMessage, setSubmissionMessage] = useState<string | null>(null);
+  const [yesNoValues, setYesNoValues] = useState<Record<string, boolean>>({});
+
+  const isSubmitting = submissionStatus === "pending";
+
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (!form) return;
+
+    setSubmissionMessage(null);
+    resetSubmissionState();
+
+    const formElement = event.currentTarget;
+    const formData = new FormData(formElement);
+
+    const values = form.fields.map((field) => {
+      if (field.type === "YES_NO") {
+        return {
+          formFieldId: field.id,
+          value: formData.get(field.id) ? "true" : "false",
+        };
+      }
+
+      return {
+        formFieldId: field.id,
+        value: String(formData.get(field.id) ?? ""),
+      };
+    });
+
+    try {
+      await createFormSubmissionAsync({
+        formId: form.id,
+        values,
+      });
+
+      formElement.reset();
+      setYesNoValues({});
+      setSubmissionMessage("Your response has been submitted successfully.");
+    } catch {
+      // The mutation state already captures the server error.
+    }
+  }
 
   if (!formId) {
     return (
@@ -229,9 +295,21 @@ export default function PublicFormPage() {
           </CardHeader>
 
           <CardContent className="space-y-6 py-6">
-            <form className="space-y-5">
+            {submissionMessage ? (
+              <div className="rounded-lg border border-zinc-700 bg-zinc-900 px-4 py-3 text-sm text-white">
+                {submissionMessage}
+              </div>
+            ) : null}
+
+            {submissionError ? (
+              <div className="rounded-lg border border-zinc-700 bg-zinc-900 px-4 py-3 text-sm text-zinc-200">
+                {submissionError.message}
+              </div>
+            ) : null}
+
+            <form className="space-y-5" onSubmit={handleSubmit}>
               {form.fields.length > 0 ? (
-                form.fields.map((field) => renderField(field))
+                form.fields.map((field) => renderField(field, yesNoValues, setYesNoValues))
               ) : (
                 <div className="rounded-lg border border-dashed border-zinc-700 bg-zinc-900 px-4 py-8 text-sm text-zinc-400">
                   This form does not have any fields yet.
@@ -244,9 +322,10 @@ export default function PublicFormPage() {
                 </p>
                 <Button
                   type="submit"
-                  className="min-w-32 border border-white bg-white text-black hover:bg-zinc-200"
+                  disabled={isSubmitting}
+                  className="min-w-32 border border-white bg-white text-black hover:bg-zinc-200 disabled:cursor-not-allowed disabled:opacity-70"
                 >
-                  Submit
+                  {isSubmitting ? "Submitting..." : "Submit"}
                 </Button>
               </div>
             </form>
