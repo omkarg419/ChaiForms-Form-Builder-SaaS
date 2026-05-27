@@ -32,7 +32,7 @@ function getFormIdFromParams(params: Record<string, string | string[] | undefine
 
 function renderField(field: FormField) {
   const commonDescription = field.description ? (
-    <p className="text-sm leading-6 text-slate-600">{field.description}</p>
+    <p className="text-sm leading-6 text-zinc-400">{field.description}</p>
   ) : null;
 
   switch (field.type) {
@@ -40,13 +40,17 @@ function renderField(field: FormField) {
       return (
         <div
           key={field.id}
-          className="flex items-start gap-3 rounded-lg border border-amber-200/70 bg-white p-4"
+          className="flex items-start gap-3 rounded-lg border border-zinc-700 bg-zinc-900 p-4"
         >
-          <Checkbox id={field.id} required={field.isRequired} />
+          <Checkbox
+            id={field.id}
+            required={field.isRequired}
+            className="border-zinc-500 data-[state=checked]:border-white data-[state=checked]:bg-white data-[state=checked]:text-zinc-950"
+          />
           <div className="grid gap-1.5">
-            <Label htmlFor={field.id} className="text-base text-slate-900">
+            <Label htmlFor={field.id} className="text-base text-white">
               {field.label}
-              {field.isRequired ? <span className="text-destructive"> *</span> : null}
+              {field.isRequired ? <span className="text-zinc-400"> *</span> : null}
             </Label>
             {commonDescription}
           </div>
@@ -55,9 +59,9 @@ function renderField(field: FormField) {
     case "NUMBER":
       return (
         <div key={field.id} className="grid gap-2.5">
-          <Label htmlFor={field.id} className="text-slate-900">
+          <Label htmlFor={field.id} className="text-white">
             {field.label}
-            {field.isRequired ? <span className="text-destructive"> *</span> : null}
+            {field.isRequired ? <span className="text-zinc-400"> *</span> : null}
           </Label>
           <Input
             id={field.id}
@@ -65,6 +69,7 @@ function renderField(field: FormField) {
             type="number"
             placeholder={field.placeholder ?? undefined}
             required={field.isRequired}
+            className="border-zinc-700 bg-zinc-950 text-white placeholder:text-zinc-400 focus-visible:ring-white/20"
           />
           {commonDescription}
         </div>
@@ -72,9 +77,9 @@ function renderField(field: FormField) {
     case "Password":
       return (
         <div key={field.id} className="grid gap-2.5">
-          <Label htmlFor={field.id} className="text-slate-900">
+          <Label htmlFor={field.id} className="text-white">
             {field.label}
-            {field.isRequired ? <span className="text-destructive"> *</span> : null}
+            {field.isRequired ? <span className="text-zinc-400"> *</span> : null}
           </Label>
           <Input
             id={field.id}
@@ -82,6 +87,7 @@ function renderField(field: FormField) {
             type="password"
             placeholder={field.placeholder ?? undefined}
             required={field.isRequired}
+            className="border-zinc-700 bg-zinc-950 text-white placeholder:text-zinc-400 focus-visible:ring-white/20"
           />
           {commonDescription}
         </div>
@@ -89,9 +95,9 @@ function renderField(field: FormField) {
     case "EMAIL":
       return (
         <div key={field.id} className="grid gap-2.5">
-          <Label htmlFor={field.id} className="text-slate-900">
+          <Label htmlFor={field.id} className="text-white">
             {field.label}
-            {field.isRequired ? <span className="text-destructive"> *</span> : null}
+            {field.isRequired ? <span className="text-zinc-400"> *</span> : null}
           </Label>
           <Input
             id={field.id}
@@ -99,6 +105,7 @@ function renderField(field: FormField) {
             type="email"
             placeholder={field.placeholder ?? undefined}
             required={field.isRequired}
+            className="border-zinc-700 bg-zinc-950 text-white placeholder:text-zinc-400 focus-visible:ring-white/20"
           />
           {commonDescription}
         </div>
@@ -106,15 +113,16 @@ function renderField(field: FormField) {
     default:
       return (
         <div key={field.id} className="grid gap-2.5">
-          <Label htmlFor={field.id} className="text-slate-900">
+          <Label htmlFor={field.id} className="text-white">
             {field.label}
-            {field.isRequired ? <span className="text-destructive"> *</span> : null}
+            {field.isRequired ? <span className="text-zinc-400"> *</span> : null}
           </Label>
           <Textarea
             id={field.id}
             name={field.labelKey}
             placeholder={field.placeholder ?? undefined}
             required={field.isRequired}
+            className="border-zinc-700 bg-zinc-950 text-white placeholder:text-zinc-400 focus-visible:ring-white/20"
           />
           {commonDescription}
         </div>
@@ -129,17 +137,17 @@ export default function PublicFormPage() {
 
   if (!formId) {
     return (
-      <main className="min-h-screen bg-[radial-gradient(circle_at_top,rgba(245,158,11,0.12),transparent_30%),linear-gradient(180deg,#fff9ef_0%,#fff_45%,#f8fafc_100%)] px-4 py-10 text-slate-900">
+      <main className="min-h-screen bg-black px-4 py-10 text-white">
         <div className="mx-auto flex max-w-3xl items-center justify-center">
-          <Card className="w-full border-amber-200/70 bg-white/90 shadow-lg backdrop-blur">
+          <Card className="w-full border-zinc-700 bg-zinc-950 shadow-lg shadow-black/30 backdrop-blur">
             <CardHeader>
               <CardTitle className="text-2xl">Form not found</CardTitle>
-              <CardDescription className="text-slate-600">
+              <CardDescription className="text-zinc-400">
                 The public form URL is missing a form id.
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <p className="text-sm text-slate-600">Check the shared link and try again.</p>
+              <p className="text-sm text-zinc-400">Check the shared link and try again.</p>
             </CardContent>
           </Card>
         </div>
@@ -149,10 +157,10 @@ export default function PublicFormPage() {
 
   if (isLoading) {
     return (
-      <main className="min-h-screen bg-[radial-gradient(circle_at_top,rgba(245,158,11,0.12),transparent_30%),linear-gradient(180deg,#fff9ef_0%,#fff_45%,#f8fafc_100%)] px-4 py-10 text-slate-900">
+      <main className="min-h-screen bg-black px-4 py-10 text-white">
         <div className="mx-auto flex min-h-[60vh] max-w-3xl items-center justify-center">
-          <Card className="w-full border-amber-200/70 bg-white/90 shadow-lg backdrop-blur">
-            <CardContent className="flex items-center gap-3 py-12 text-slate-600">
+          <Card className="w-full border-zinc-700 bg-zinc-950 shadow-lg shadow-black/30 backdrop-blur">
+            <CardContent className="flex items-center gap-3 py-12 text-zinc-400">
               <Loader2 className="size-5 animate-spin" />
               Loading public form...
             </CardContent>
@@ -164,17 +172,21 @@ export default function PublicFormPage() {
 
   if (isError || !form) {
     return (
-      <main className="min-h-screen bg-[radial-gradient(circle_at_top,rgba(245,158,11,0.12),transparent_30%),linear-gradient(180deg,#fff9ef_0%,#fff_45%,#f8fafc_100%)] px-4 py-10 text-slate-900">
+      <main className="min-h-screen bg-black px-4 py-10 text-white">
         <div className="mx-auto flex min-h-[60vh] max-w-3xl items-center justify-center">
-          <Card className="w-full border-amber-200/70 bg-white/90 shadow-lg backdrop-blur">
+          <Card className="w-full border-zinc-700 bg-zinc-950 shadow-lg shadow-black/30 backdrop-blur">
             <CardHeader>
               <CardTitle className="text-2xl">Form not available</CardTitle>
-              <CardDescription className="text-slate-600">
+              <CardDescription className="text-zinc-400">
                 This public form link is invalid or the form no longer exists.
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <Button variant="outline" asChild>
+              <Button
+                variant="outline"
+                asChild
+                className="border-zinc-600 bg-black text-white hover:bg-zinc-900"
+              >
                 <a href="/dashboard">
                   <ArrowLeft className="size-4" />
                   Back to dashboard
@@ -188,30 +200,30 @@ export default function PublicFormPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[radial-gradient(circle_at_top,rgba(245,158,11,0.12),transparent_30%),linear-gradient(180deg,#fff9ef_0%,#fff_45%,#f8fafc_100%)] px-4 py-8 text-slate-900 sm:px-6 lg:px-8">
+    <main className="min-h-screen bg-black px-4 py-8 text-white sm:px-6 lg:px-8">
       <div className="mx-auto flex max-w-3xl flex-col gap-6">
-        <div className="flex items-center justify-between gap-3 text-slate-700">
+        <div className="flex items-center justify-between gap-3 text-zinc-300">
           <div className="flex items-center gap-2 text-sm">
-            <Sparkles className="size-4 text-amber-500" />
+            <Sparkles className="size-4 text-white" />
             Public form
           </div>
-          <div className="flex items-center gap-2 rounded-full border border-amber-200 bg-amber-50 px-3 py-1 text-xs font-medium text-amber-700">
+          <div className="flex items-center gap-2 rounded-full border border-zinc-600 bg-zinc-950 px-3 py-1 text-xs font-medium text-zinc-200">
             <Lock className="size-3.5" />
             Shared link
           </div>
         </div>
 
-        <Card className="overflow-hidden border-amber-200/70 bg-white/95 shadow-xl shadow-amber-950/5 backdrop-blur">
-          <CardHeader className="border-b border-amber-100 bg-gradient-to-br from-amber-50 via-white to-orange-50/70">
-            <CardTitle className="text-3xl tracking-tight text-slate-950 sm:text-4xl">
+        <Card className="overflow-hidden border-zinc-700 bg-zinc-950 shadow-xl shadow-black/30 backdrop-blur">
+          <CardHeader className="border-b border-zinc-800 bg-gradient-to-br from-zinc-950 via-zinc-900 to-black">
+            <CardTitle className="text-3xl tracking-tight text-white sm:text-4xl">
               {form.title}
             </CardTitle>
             {form.description ? (
-              <CardDescription className="max-w-2xl text-base leading-7 text-slate-600">
+              <CardDescription className="max-w-2xl text-base leading-7 text-zinc-400">
                 {form.description}
               </CardDescription>
             ) : (
-              <CardDescription className="max-w-2xl text-base leading-7 text-slate-600">
+              <CardDescription className="max-w-2xl text-base leading-7 text-zinc-400">
                 Fill out this form and submit your response.
               </CardDescription>
             )}
@@ -222,16 +234,19 @@ export default function PublicFormPage() {
               {form.fields.length > 0 ? (
                 form.fields.map((field) => renderField(field))
               ) : (
-                <div className="rounded-lg border border-dashed border-amber-200 bg-amber-50/50 px-4 py-8 text-sm text-slate-600">
+                <div className="rounded-lg border border-dashed border-zinc-700 bg-zinc-900 px-4 py-8 text-sm text-zinc-400">
                   This form does not have any fields yet.
                 </div>
               )}
 
               <div className="flex items-center justify-between gap-3 pt-2">
-                <p className="text-xs text-slate-500">
+                <p className="text-xs text-zinc-400">
                   Responses are collected securely through this shared link.
                 </p>
-                <Button type="submit" className="min-w-32">
+                <Button
+                  type="submit"
+                  className="min-w-32 border border-white bg-white text-black hover:bg-zinc-200"
+                >
                   Submit
                 </Button>
               </div>
