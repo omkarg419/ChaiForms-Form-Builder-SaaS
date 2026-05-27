@@ -136,7 +136,7 @@ export default function PublicFormPage() {
 
   if (!formId) {
     return (
-      <main className="min-h-screen bg-black px-4 py-10 text-white">
+      <main className="min-h-screen bg-[linear-gradient(180deg,#000000_0%,#111111_42%,#a1a1aa_100%)] px-4 py-10 text-white">
         <div className="mx-auto flex max-w-3xl items-center justify-center">
           <Card className="w-full border-zinc-700 bg-zinc-950 shadow-lg shadow-black/30 backdrop-blur">
             <CardHeader>
@@ -156,7 +156,7 @@ export default function PublicFormPage() {
 
   if (isLoading) {
     return (
-      <main className="min-h-screen bg-black px-4 py-10 text-white">
+      <main className="min-h-screen bg-[linear-gradient(180deg,#000000_0%,#111111_42%,#a1a1aa_100%)] px-4 py-10 text-white">
         <div className="mx-auto flex min-h-[60vh] max-w-3xl items-center justify-center">
           <Card className="w-full border-zinc-700 bg-zinc-950 shadow-lg shadow-black/30 backdrop-blur">
             <CardContent className="flex items-center gap-3 py-12 text-zinc-400">
@@ -171,7 +171,7 @@ export default function PublicFormPage() {
 
   if (isError || !form) {
     return (
-      <main className="min-h-screen bg-black px-4 py-10 text-white">
+      <main className="min-h-screen bg-[linear-gradient(180deg,#000000_0%,#111111_42%,#a1a1aa_100%)] px-4 py-10 text-white">
         <div className="mx-auto flex min-h-[60vh] max-w-3xl items-center justify-center">
           <Card className="w-full border-zinc-700 bg-zinc-950 shadow-lg shadow-black/30 backdrop-blur">
             <CardHeader>
@@ -199,7 +199,7 @@ export default function PublicFormPage() {
   }
 
   return (
-    <main className="min-h-screen bg-black px-4 py-8 text-white sm:px-6 lg:px-8">
+    <main className="min-h-screen bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.18),transparent_24%),linear-gradient(180deg,#000000_0%,#111111_42%,#a1a1aa_100%)] px-4 py-8 text-white sm:px-6 lg:px-8">
       <div className="mx-auto flex max-w-3xl flex-col gap-6">
         <div className="flex items-center justify-between gap-3 text-zinc-300">
           <div className="flex items-center gap-2 text-sm">
