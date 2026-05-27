@@ -9,7 +9,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~/com
 import { Checkbox } from "~/components/ui/checkbox";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
-import { Textarea } from "~/components/ui/textarea";
 
 type FormField = {
   id: string;
@@ -117,7 +116,7 @@ function renderField(field: FormField) {
             {field.label}
             {field.isRequired ? <span className="text-zinc-400"> *</span> : null}
           </Label>
-          <Textarea
+          <Input
             id={field.id}
             name={field.labelKey}
             placeholder={field.placeholder ?? undefined}
