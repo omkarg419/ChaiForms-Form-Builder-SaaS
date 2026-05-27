@@ -153,9 +153,9 @@ export default function FormSubmissionsPage() {
   return (
     <main className="relative min-h-screen overflow-hidden bg-[#050505] text-white">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.08),transparent_30%),radial-gradient(circle_at_top_right,rgba(255,255,255,0.05),transparent_28%),linear-gradient(to_bottom,rgba(255,255,255,0.03),transparent_20%)]" />
-      <div className="pointer-events-none absolute inset-0 opacity-[0.08] [background-image:linear-gradient(rgba(255,255,255,0.12)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.12)_1px,transparent_1px)] [background-size:48px_48px]" />
+      <div className="pointer-events-none absolute inset-0 opacity-[0.08] bg-[linear-gradient(rgba(255,255,255,0.12)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.12)_1px,transparent_1px)] bg-size-[48px_48px]" />
 
-      <div className="relative mx-auto flex min-h-screen w-full max-w-[1800px] flex-col gap-6 px-4 py-5 sm:px-6 lg:px-8 lg:py-8">
+      <div className="relative mx-auto flex min-h-screen w-full max-w-450 flex-col gap-6 px-4 py-5 sm:px-6 lg:px-8 lg:py-8">
         <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-4xl space-y-3">
             <div className="flex items-center gap-2 text-sm text-zinc-400">
@@ -188,7 +188,7 @@ export default function FormSubmissionsPage() {
         </div>
 
         <section className="grid gap-4 sm:grid-cols-3">
-          <Card className="border-white/10 bg-white/[0.04] text-white shadow-[0_10px_50px_rgba(0,0,0,0.35)] backdrop-blur-xl">
+          <Card className="border-white/10 bg-white/4 text-white shadow-[0_10px_50px_rgba(0,0,0,0.35)] backdrop-blur-xl">
             <CardHeader className="space-y-1 pb-3">
               <CardDescription className="text-zinc-400">Responses</CardDescription>
               <CardTitle className="text-3xl font-semibold tracking-tight text-white">
@@ -197,7 +197,7 @@ export default function FormSubmissionsPage() {
             </CardHeader>
           </Card>
 
-          <Card className="border-white/10 bg-white/[0.04] text-white shadow-[0_10px_50px_rgba(0,0,0,0.35)] backdrop-blur-xl">
+          <Card className="border-white/10 bg-white/4 text-white shadow-[0_10px_50px_rgba(0,0,0,0.35)] backdrop-blur-xl">
             <CardHeader className="space-y-1 pb-3">
               <CardDescription className="text-zinc-400">Fields</CardDescription>
               <CardTitle className="text-3xl font-semibold tracking-tight text-white">
@@ -206,7 +206,7 @@ export default function FormSubmissionsPage() {
             </CardHeader>
           </Card>
 
-          <Card className="border-white/10 bg-white/[0.04] text-white shadow-[0_10px_50px_rgba(0,0,0,0.35)] backdrop-blur-xl">
+          <Card className="border-white/10 bg-white/4 text-white shadow-[0_10px_50px_rgba(0,0,0,0.35)] backdrop-blur-xl">
             <CardHeader className="space-y-1 pb-3">
               <CardDescription className="text-zinc-400">Latest submission</CardDescription>
               <CardTitle className="text-base font-medium tracking-tight text-white sm:text-lg">
@@ -216,7 +216,7 @@ export default function FormSubmissionsPage() {
           </Card>
         </section>
 
-        <section className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-[28px] border border-white/10 bg-white/[0.045] shadow-[0_20px_80px_rgba(0,0,0,0.45)] backdrop-blur-2xl">
+        <section className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-[28px] border border-white/10 bg-white/4.5 shadow-[0_20px_80px_rgba(0,0,0,0.45)] backdrop-blur-2xl">
           <div className="flex flex-wrap items-center justify-between gap-4 border-b border-white/10 px-4 py-4 sm:px-6 lg:px-8">
             <div>
               <p className="text-sm font-medium text-white">Submission table</p>
@@ -246,16 +246,16 @@ export default function FormSubmissionsPage() {
                 <Table className="min-w-max border-separate border-spacing-0">
                   <TableHeader>
                     <TableRow className="border-white/10 bg-zinc-950/95 text-zinc-300 hover:bg-zinc-950/95">
-                      <TableHead className="sticky top-0 z-10 min-w-[180px] border-b border-white/10 bg-zinc-950/95 px-5 py-4 text-[11px] font-semibold uppercase tracking-[0.22em] text-zinc-400 backdrop-blur-xl">
+                      <TableHead className="sticky top-0 z-10 min-w-45 border-b border-white/10 bg-zinc-950/95 px-5 py-4 text-[11px] font-semibold uppercase tracking-[0.22em] text-zinc-400 backdrop-blur-xl">
                         Submission
                       </TableHead>
-                      <TableHead className="sticky top-0 z-10 min-w-[180px] border-b border-white/10 bg-zinc-950/95 px-5 py-4 text-[11px] font-semibold uppercase tracking-[0.22em] text-zinc-400 backdrop-blur-xl">
+                      <TableHead className="sticky top-0 z-10 min-w-45 border-b border-white/10 bg-zinc-950/95 px-5 py-4 text-[11px] font-semibold uppercase tracking-[0.22em] text-zinc-400 backdrop-blur-xl">
                         Submitted at
                       </TableHead>
                       {orderedFields.map((field) => (
                         <TableHead
                           key={field.id}
-                          className="sticky top-0 z-10 min-w-[240px] border-b border-white/10 bg-zinc-950/95 px-5 py-4 text-left backdrop-blur-xl"
+                          className="sticky top-0 z-10 min-w-60 border-b border-white/10 bg-zinc-950/95 px-5 py-4 text-left backdrop-blur-xl"
                         >
                           <div className="space-y-1">
                             <div className="text-sm font-medium tracking-tight text-white">
@@ -279,7 +279,7 @@ export default function FormSubmissionsPage() {
                       return (
                         <TableRow
                           key={submission.id}
-                          className="border-white/10 bg-transparent transition-colors hover:bg-white/[0.04]"
+                          className="border-white/10 bg-transparent transition-colors hover:bg-white/4"
                         >
                           <TableCell className="px-5 py-4 align-top font-medium text-white">
                             <div className="flex flex-col gap-1">
@@ -298,7 +298,7 @@ export default function FormSubmissionsPage() {
                                 key={`${submission.id}-${field.id}`}
                                 className="px-5 py-4 align-top text-zinc-200"
                               >
-                                <div className="max-w-[280px] whitespace-normal break-words leading-6">
+                                <div className="max-w-70 whitespace-normal wrap-break-word leading-6">
                                   {formatSubmissionValue(value, field.type)}
                                 </div>
                               </TableCell>
